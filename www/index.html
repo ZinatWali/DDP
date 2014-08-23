@@ -3,7 +3,24 @@
 	<link rel='stylesheet' href='css/bootstrap.min.css' />
 	<link rel='stylesheet' href='css/bootstrap-theme.min.css' />
 	<link rel='stylesheet' href='css/shiny.css' />
+	<link rel='stylesheet' href='css/normalize.css' />
+	<link rel='stylesheet' href='css/stylesheet.css' />
+	<link rel='stylesheet' href='css/selectize.bootstrap2.css' />
 
+	<link rel='stylesheet' href='css/jquery.slider.min.css' />
+
+<script type='text/javascript' src='js/json2-min.js'></script>
+<script type='text/javascript' src='js/jquery.js'></script>
+<script type='text/javascript' src='js/bootstrap.min.js'></script>
+<script type='text/javascript' src='js/shiny.js'></script>
+
+
+<!--[if lt IE 9]>
+<script src="js/es5-shim.min.js"></script>
+<![endif]-->
+
+<script type='text/javascript' src='js/selectize.min.js'></script>
+<script type='text/javascript' src='js/jquery.slider.min.js'></script>
 
 
 </head>
@@ -11,23 +28,159 @@
 
 <body>
 
-	<div class='container'>
-		<div class='row'>
-			<div class='col-md-4' style='background-color:blue'>
-				Hello
+<div class='container'>
+	<div class='row'>
+		<div class='col-md-4 container' style='background-color:blue'>
+			<form class="well">
+		        
+
+		        <div style="padding:10px; color:#990033" class="row">
+		          <div class="col-md-4" style='background:pink'>
+		            <label class="checkbox" for="featCyl">
+		              <input id="featCyl" type="checkbox" checked="checked"/>
+		              <span>
+		                <h4>cyl</h4>
+		              </span>
+		            </label>
+		          </div>
+		          <div class="col-md-8" style='background:yellow'>
+		            <label class="control-label" for="cyl"></label>
+		            <select id="cyl"><option value="4" selected>4</option>
+						<option value="6">6</option>
+						<option value="8">8</option></select>
+		            <script type="application/json" data-for="cyl" data-nonempty="">{}</script>
+		          </div>
+		        </div>
+
+
+
+		        <div>
+		          <div style="overflow:hidden; clear:both"></div>
+		          <label class="checkbox" for="featDisp">
+		            <input id="featDisp" type="checkbox"/>
+		            <span>
+		              <h4>disp</h4>
+		            </span>
+		          </label>
+		          <div>
+		            <label class="control-label" for="disp"></label>
+		            <input id="disp" type="slider" name="disp" value="271.55" class="jslider" data-from="71.1" data-to="472" data-step="10" data-skin="plastic" data-round="FALSE" data-locale="us" data-format="#,##0.#####" data-smooth="FALSE"/>
+		          </div>
+		          <label class="checkbox" for="featHP">
+		            <input id="featHP" type="checkbox" checked="checked"/>
+		            <span>
+		              <h4>hp</h4>
+		            </span>
+		          </label>
+		          <div>
+		            <label class="control-label" for="hp"></label>
+		            <input id="hp" type="slider" name="hp" value="193" class="jslider" data-from="52" data-to="335" data-step="5" data-skin="plastic" data-round="FALSE" data-locale="us" data-format="#,##0.#####" data-smooth="FALSE"/>
+		          </div>
+		          <label class="checkbox" for="featDrat">
+		            <input id="featDrat" type="checkbox"/>
+		            <span>
+		              <h4>drat</h4>
+		            </span>
+		          </label>
+		          <div>
+		            <label class="control-label" for="drat"></label>
+		            <input id="drat" type="slider" name="drat" value="3.845" class="jslider" data-from="2.76" data-to="4.93" data-step="0.3" data-skin="plastic" data-round="FALSE" data-locale="us" data-format="#,##0.#####" data-scale="|;|;|;|;|;|;|;|" data-smooth="FALSE"/>
+		          </div>
+		          <label class="checkbox" for="featWT">
+		            <input id="featWT" type="checkbox" checked="checked"/>
+		            <span>
+		              <h4>wt</h4>
+		            </span>
+		          </label>
+		          <div>
+		            <label class="control-label" for="wt">
+		              <h4>wt : </h4>
+		            </label>
+		            <input id="wt" type="slider" name="wt" value="3.4685" class="jslider" data-from="1.513" data-to="5.424" data-step="0.3" data-skin="plastic" data-round="FALSE" data-locale="us" data-format="#,##0.#####" data-scale="|;|;|;|;|;|;|;|;|;|;|;|;|;|" data-smooth="FALSE"/>
+		          </div>
+		          <label class="checkbox" for="featQsec">
+		            <input id="featQsec" type="checkbox"/>
+		            <span>
+		              <h4>qsec</h4>
+		            </span>
+		          </label>
+		          <div>
+		            <label class="control-label" for="qsec ">
+		              <h4>qsec : </h4>
+		            </label>
+		            <input id="qsec " type="slider" name="qsec " value="18.7" class="jslider" data-from="14.5" data-to="22.9" data-step="0.3" data-skin="plastic" data-round="FALSE" data-locale="us" data-format="#,##0.#####" data-smooth="FALSE"/>
+		          </div>
+		          <label class="checkbox" for="featVS">
+		            <input id="featVS" type="checkbox"/>
+		            <span>
+		              <h4>vs</h4>
+		            </span>
+		          </label>
+		          <label class="control-label" for="vs">
+		            <h4>vs : </h4>
+		          </label>
+		          <select id="vs">
+		          		<option value="0" selected>0</option>
+						<option value="1">1</option></select>
+		          <script type="application/json" data-for="vs" data-nonempty="">{}</script>
+		          <label class="checkbox" for="featAM">
+		            <input id="featAM" type="checkbox"/>
+		            <span>
+		              <h4>am</h4>
+		            </span>
+		          </label>
+		          <label class="control-label" for="am">
+		            <h4>am : </h4>
+		          </label>
+		          <select id="am">
+		          		<option value="0" selected>0</option>
+						<option value="1">1</option></select>
+		          <script type="application/json" data-for="am" data-nonempty="">{}</script>
+		          <label class="checkbox" for="featGear">
+		            <input id="featGear" type="checkbox"/>
+		            <span>
+		              <h4>gear</h4>
+		            </span>
+		          </label>
+		          <label class="control-label" for="gear">
+		            <h4>gear : </h4>
+		          </label>
+		          <select id="gear">
+		          		<option value="3" selected>3</option>
+						<option value="4">4</option>
+						<option value="5">5</option></select>
+		          <script type="application/json" data-for="gear" data-nonempty="">{}</script>
+		          <label class="checkbox" for="featCarb">
+		            <input id="featCarb" type="checkbox"/>
+		            <span>
+		              <h4>carb</h4>
+		            </span>
+		          </label>
+		          <label class="control-label" for="carb">
+		            <h4>carb : </h4>
+		          </label>
+		          <select id="carb">
+		          		<option value="1" selected>1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="6">6</option>
+						<option value="8">8</option></select>
+		          <script type="application/json" data-for="carb" data-nonempty="">{}</script>
+		          <div>
+		            <button type="submit" class="btn btn-primary">Submit</button>
+		          </div>
+		        </div>
+		      </form>
 			</div>
 
 			<div class='col-md-8' style='background-color:orange'>
-				<div id="mpg" class="shiny-html-output"></div>
+				<div id="mpg" class="shiny-text-output"></div>
 			</div>
 
 
 		</div>
 
 	</div>
-<script type='text/javascript' src='//code.jquery.com/jquery-1.8.3.min.js'></script>
-<script type='text/javascript' src='js/bootstrip.min.js'></script>
-<script type='text/javascript' src='js/shiny.js'></script>
-
 </body>
 </html>

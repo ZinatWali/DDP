@@ -37,7 +37,7 @@
     else if (window.getComputedStyle) {
       // getComputedStyle can return null when we're inside a hidden iframe on
       // Firefox; don't attempt to retrieve style props in this case.
-      // https://bugzilla.mozilla.org/show_bug.cgi?id=548397
+      // https://bugzilla.mozilla.org/show_bug.cgi?id=548397 
       var style = document.defaultView.getComputedStyle(el, null);
       if (style)
         x = style.getPropertyValue(styleProp);
@@ -70,28 +70,6 @@
     if (blob.webkitSlice)
       return blob.webkitSlice(start, end);
     throw "Blob doesn't support slice";
-  }
-
-  // Given an element and a function(width, height), returns a function(). When
-  // the output function is called, it calls the input function with the offset
-  // width and height of the input element--but only if the size of the element
-  // is non-zero and the size is different than the last time the output
-  // function was called.
-  //
-  // Basically we are trying to filter out extraneous calls to func, so that
-  // when the window size changes or whatever, we don't run resize logic for
-  // elements that haven't actually changed size or aren't visible anyway.
-  function makeResizeFilter(el, func) {
-    var lastSize = {};
-    return function() {
-      var size = { w: el.offsetWidth, h: el.offsetHeight };
-      if (size.w === 0 && size.h === 0)
-        return;
-      if (size.w === lastSize.w && size.h === lastSize.h)
-        return;
-      lastSize = size;
-      func(size.w, size.h);
-    };
   }
 
   var _BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder ||
@@ -908,10 +886,13 @@
     });
 
     addMessageHandler('progress', function(message) {
-      if (message.type && message.message) {
-        var handler = progressHandlers[message.type];
-        if (handler)
-          handler.call(this, message.message);
+      $(document.documentElement).addClass('shiny-busy');
+      for (var i = 0; i < message.length; i++) {
+        var key = message[i];
+        var binding = this.$bindings[key];
+        if (binding && binding.showProgress) {
+          binding.showProgress(true);
+        }
       }
     });
 
@@ -942,96 +923,6 @@
     addMessageHandler('config', function(message) {
       this.config = message;
     });
-
-
-    // Progress reporting ====================================================
-
-    var progressHandlers = {
-      // Progress for a particular object
-      binding: function(message) {
-        $(document.documentElement).addClass('shiny-busy');
-        var key = message.id;
-        var binding = this.$bindings[key];
-        if (binding && binding.showProgress) {
-          binding.showProgress(true);
-        }
-      },
-      // Open a page-level progress bar
-      open: function(message) {
-        // Add progress container (for all progress items) if not already present
-        var $container = $('.shiny-progress-container');
-        if ($container.length == 0) {
-          $container = $('<div class="shiny-progress-container"></div>');
-          $('body').append($container);
-        }
-
-        // Add div for just this progress ID
-        var depth = $('.shiny-progress.open').length;
-        var $progress = $(progressHandlers.progressHTML);
-        $progress.attr('id', message.id);
-        $container.append($progress);
-
-        // Stack bars
-        var $progressBar = $progress.find('.progress');
-        $progressBar.css('top', depth * $progressBar.height() + 'px');
-
-        // Stack text objects
-        var $progressText = $progress.find('.progress-text');
-        $progressText.css('top', 3 * $progressBar.height() +
-          depth * $progressText.outerHeight() + 'px');
-
-        $progress.hide();
-      },
-
-      // Update page-level progress bar
-      update: function(message) {
-        var $progress = $('#' + message.id + '.shiny-progress');
-        if (typeof(message.message) !== 'undefined') {
-          $progress.find('.progress-message').text(message.message);
-        }
-        if (typeof(message.detail) !== 'undefined') {
-          $progress.find('.progress-detail').text(message.detail);
-        }
-        if (typeof(message.value) !== 'undefined') {
-          if (message.value !== null) {
-            $progress.find('.progress').show();
-            $progress.find('.bar').width((message.value*100) + '%');
-          }
-          else {
-            $progress.find('.progress').hide();
-          }
-        }
-
-        $progress.fadeIn();
-      },
-
-      // Close page-level progress bar
-      close: function(message) {
-        var $progress = $('#' + message.id + '.shiny-progress');
-        $progress.removeClass('open');
-
-        $progress.fadeOut({
-          complete: function() {
-            $progress.remove();
-
-            // If this was the last shiny-progress, remove container
-            if ($('.shiny-progress').length == 0)
-              $('.shiny-progress-container').remove();
-          }
-        });
-      },
-
-      progressHTML: '<div class="shiny-progress open">' +
-        '<div class="progress progress-striped active"><div class="bar"></div></div>' +
-        '<div class="progress-text">' +
-          '<span class="progress-message">foo</span>' +
-          '<span class="progress-detail"></span>' +
-        '</div>' +
-      '</div>'
-    };
-
-    exports.progressHandlers = progressHandlers;
-
 
   }).call(ShinyApp.prototype);
 
@@ -1369,17 +1260,13 @@
   });
   outputBindings.register(htmlOutputBinding, 'shiny.htmlOutput');
 
-  var renderDependencies = exports.renderDependencies = function(dependencies) {
+  // Render HTML in a DOM element, inserting singletons into head as needed
+  exports.renderHtml = function(html, el, dependencies) {
     if (dependencies) {
       $.each(dependencies, function(i, dep) {
         renderDependency(dep);
       });
     }
-  };
-
-  // Render HTML in a DOM element, inserting singletons into head as needed
-  exports.renderHtml = function(html, el, dependencies) {
-    renderDependencies(dependencies);
     return singletons.renderHtml(html, el);
   };
 
@@ -1417,30 +1304,16 @@
     if (dep.stylesheet) {
       var stylesheets = $.map(asArray(dep.stylesheet), function(stylesheet) {
         return $("<link rel='stylesheet' type='text/css'>")
-          .attr("href", href + "/" + escape(stylesheet));
+          .attr("href", href + "/" + stylesheet);
       });
       $head.append(stylesheets);
     }
 
     if (dep.script) {
       var scripts = $.map(asArray(dep.script), function(scriptName) {
-        return $("<script>").attr("src", href + "/" + escape(scriptName));
+        return $("<script>").attr("src", href + "/" + scriptName);
       });
       $head.append(scripts);
-    }
-
-    if (dep.attachment) {
-      // dep.attachment might be a single string, an array, or an object.
-      var attachments = dep.attachment;
-      if (typeof(attachments) === "string")
-        attachments = [attachments];
-
-      var attach = $.map(attachments, function(attachment, key) {
-        return $("<link rel='attachment'>")
-          .attr("id", dep.name + "-" + key + "-attachment")
-          .attr("href", href + "/" + escape(attachment));
-      });
-      $head.append(attach);
     }
 
     if (dep.head) {
@@ -1556,7 +1429,7 @@
       }).join('');
       header = '<thead><tr>' + header + '</tr></thead>';
       var footer = '';
-      if (data.options === null || data.options.searching !== false) {
+      if (data.options === null || data.options.bFilter !== false) {
         footer = $.map(colnames, function(x) {
           return '<th><input type="text" placeholder="' + x + '" /></th>';
         }).join('');
@@ -1573,13 +1446,13 @@
           data.options[x] = eval('(' + data.options[x] + ')');
         });
 
-      var oTable = $(el).children("table").DataTable($.extend({
-        "processing": true,
-        "serverSide": true,
-        "order": [],
-        "orderClasses": false,
-        "pageLength": 25,
-        "ajax": data.action
+      var oTable = $(el).children("table").dataTable($.extend({
+        "bProcessing": true,
+        "bServerSide": true,
+        "aaSorting": [],
+        "bSortClasses": false,
+        "iDisplayLength": 25,
+        "sAjaxSource": data.action
       }, data.options));
       // the table object may need post-processing
       if (typeof data.callback === 'string') {
@@ -1591,18 +1464,16 @@
       // use debouncing for searching boxes
       $el.find('label input').first().unbind('keyup')
            .keyup(debounce(data.searchDelay, function() {
-              oTable.search(this.value).draw();
+              oTable.fnFilter(this.value);
             }));
       var searchInputs = $el.find("tfoot input");
       if (searchInputs.length > 0) {
-        // this is a little weird: aoColumns/bSearchable are still in DT 1.10
-        // https://github.com/DataTables/DataTables/issues/388
-        $.each(oTable.settings()[0].aoColumns, function(i, x) {
+        $.each(oTable.fnSettings().aoColumns, function(i, x) {
           // hide the text box if not searchable
           if (!x.bSearchable) searchInputs.eq(i).hide();
         });
         searchInputs.keyup(debounce(data.searchDelay, function() {
-          oTable.column(searchInputs.index(this)).search(this.value).draw();
+          oTable.fnFilter(this.value, searchInputs.index(this));
         }));
       }
       // FIXME: ugly scrollbars in tab panels b/c Bootstrap uses 'visible: auto'
@@ -2248,14 +2119,13 @@
         selectize.clearOptions();
         selectize.settings.load = function(query, callback) {
           if (!query.length) return callback();
-          var settings = selectize.settings;
           $.ajax({
             url: data.url,
             data: {
               query: query,
-              field: JSON.stringify([settings.searchField]),
-              conju: settings.searchConjunction,
-              maxop: settings.maxOptions
+              field: JSON.stringify(selectize.settings.searchField),
+              conju: selectize.settings.searchConjunction,
+              maxop: selectize.settings.maxOptions
             },
             type: 'GET',
             error: function() {
@@ -2785,14 +2655,6 @@
   var OutputBindingAdapter = function(el, binding) {
     this.el = el;
     this.binding = binding;
-
-    // If the binding actually has a resize method, override the prototype of
-    // onResize with a version that does a makeResizeFilter on the element.
-    if (binding.resize) {
-      this.onResize = makeResizeFilter(el, function(width, height) {
-        binding.resize(el, width, height);
-      });
-    }
   };
   (function() {
     this.onValueChange = function(data) {
@@ -2803,9 +2665,6 @@
     };
     this.showProgress = function(show) {
       this.binding.showProgress(this.el, show);
-    };
-    this.onResize = function() {
-      // Intentionally left blank; see constructor
     };
   }).call(OutputBindingAdapter.prototype);
 
@@ -3136,9 +2995,6 @@
           inputs.setInput('.clientdata_output_' + this.id + '_width', this.offsetWidth);
           inputs.setInput('.clientdata_output_' + this.id + '_height', this.offsetHeight);
         }
-      });
-      $('.shiny-bound-output').each(function() {
-        $(this).data('shiny-output-binding').onResize();
       });
     }
 
