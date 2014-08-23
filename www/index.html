@@ -6,9 +6,12 @@
 	<link rel='stylesheet' href='css/normalize.css' />
 	<link rel='stylesheet' href='css/stylesheet.css' />
 	<link rel='stylesheet' href='css/selectize.bootstrap2.css' />
-
 	<link rel='stylesheet' href='css/jquery.slider.min.css' />
+	<link rel="stylesheet" href="styles/default.css">
 
+
+<script type="text/javascript" src="js/highlight.pack.js"></script>
+<script type='text/javascript'>hljs.initHighlightingOnLoad();</script>
 <script type='text/javascript' src='js/json2-min.js'></script>
 <script type='text/javascript' src='js/jquery.js'></script>
 <script type='text/javascript' src='js/bootstrap.min.js'></script>
@@ -26,16 +29,23 @@
 </head>
 
 
-<body>
+<body style="margin-top:0px">
+<div class="page-header" style="margin-top:0px">
+		<div class="col_md_12" 
+		style="text-align:center; padding:20px; background-image:url('images.jpg');background-repeat:no-repeat">
+			<h3>Predicting mpg(Miles/Gallon) with a Dynamic Model Selection</h3>
+			<h2>(Based on mtcars data)</h2>
+			</div>
+	</div>
+
 
 <div class='container'>
 	<div class='row'>
-		<div class='col-md-4 container' style='background-color:blue'>
-			<form class="well">
-		        
-
-		        <div style="padding:10px; color:#990033" class="row">
-		          <div class="col-md-4" style='background:pink'>
+		<div class='col-md-4 container'>
+			<form class="well">       
+				<strong>Please Choose some input features : </strong>
+		        <div style="padding:10px;" class="row">
+		          <div class="col-md-4">
 		            <label class="checkbox" for="featCyl">
 		              <input id="featCyl" type="checkbox" checked="checked"/>
 		              <span>
@@ -43,7 +53,7 @@
 		              </span>
 		            </label>
 		          </div>
-		          <div class="col-md-8" style='background:yellow'>
+		          <div class="col-md-8">
 		            <label class="control-label" for="cyl"></label>
 		            <select id="cyl"><option value="4" selected>4</option>
 						<option value="6">6</option>
@@ -54,128 +64,232 @@
 
 
 
-		        <div>
-		          <div style="overflow:hidden; clear:both"></div>
+		        <div style="padding:10px;" class="row">
+		          <div class="col-md-4">
 		          <label class="checkbox" for="featDisp">
 		            <input id="featDisp" type="checkbox"/>
 		            <span>
 		              <h4>disp</h4>
 		            </span>
 		          </label>
-		          <div>
+		          </div>
+		          <div class="col-md-8">
 		            <label class="control-label" for="disp"></label>
 		            <input id="disp" type="slider" name="disp" value="271.55" class="jslider" data-from="71.1" data-to="472" data-step="10" data-skin="plastic" data-round="FALSE" data-locale="us" data-format="#,##0.#####" data-smooth="FALSE"/>
 		          </div>
-		          <label class="checkbox" for="featHP">
-		            <input id="featHP" type="checkbox" checked="checked"/>
-		            <span>
-		              <h4>hp</h4>
-		            </span>
-		          </label>
-		          <div>
-		            <label class="control-label" for="hp"></label>
-		            <input id="hp" type="slider" name="hp" value="193" class="jslider" data-from="52" data-to="335" data-step="5" data-skin="plastic" data-round="FALSE" data-locale="us" data-format="#,##0.#####" data-smooth="FALSE"/>
+		        </div>
+
+		        <div style="padding:10px;" class="row">
+		        	<div class="col-md-4">
+			          <label class="checkbox" for="featHP">
+			            <input id="featHP" type="checkbox" checked="checked"/>
+			            <span>
+			              <h4>hp</h4>
+			            </span>
+			          </label>
+		          	</div>
+			        <div class="col-md-8">
+			            <label class="control-label" for="hp"></label>
+			            <input id="hp" type="slider" name="hp" value="193" class="jslider" data-from="52" data-to="335" data-step="5" data-skin="plastic" data-round="FALSE" data-locale="us" data-format="#,##0.#####" data-smooth="FALSE"/>
+		          	</div>
 		          </div>
-		          <label class="checkbox" for="featDrat">
-		            <input id="featDrat" type="checkbox"/>
-		            <span>
-		              <h4>drat</h4>
-		            </span>
-		          </label>
-		          <div>
+		          <div style="padding:10px;" class="row">
+		          	<div class="col-md-4">
+				          <label class="checkbox" for="featDrat">
+				            <input id="featDrat" type="checkbox"/>
+				            <span>
+				              <h4>drat</h4>
+				            </span>
+				          </label>
+		          	</div>
+		          <div class="col-md-8">
 		            <label class="control-label" for="drat"></label>
 		            <input id="drat" type="slider" name="drat" value="3.845" class="jslider" data-from="2.76" data-to="4.93" data-step="0.3" data-skin="plastic" data-round="FALSE" data-locale="us" data-format="#,##0.#####" data-scale="|;|;|;|;|;|;|;|" data-smooth="FALSE"/>
 		          </div>
+		          </div>
+		          <div style="padding:10px;" class="row">
+		          	<div class="col-md-4">
 		          <label class="checkbox" for="featWT">
 		            <input id="featWT" type="checkbox" checked="checked"/>
 		            <span>
 		              <h4>wt</h4>
 		            </span>
 		          </label>
-		          <div>
-		            <label class="control-label" for="wt">
-		              <h4>wt : </h4>
-		            </label>
-		            <input id="wt" type="slider" name="wt" value="3.4685" class="jslider" data-from="1.513" data-to="5.424" data-step="0.3" data-skin="plastic" data-round="FALSE" data-locale="us" data-format="#,##0.#####" data-scale="|;|;|;|;|;|;|;|;|;|;|;|;|;|" data-smooth="FALSE"/>
 		          </div>
+		          <div class="col-md-4">
+				      <label class="control-label" for="wt"></label>
+		            <input id="wt" type="slider" name="wt" value="3.4685" class="jslider" data-from="1.513" data-to="5.424" data-step="0.3" data-skin="plastic" data-round="FALSE" data-locale="us" data-format="#,##0.#####" data-scale="|;|;|;|;|;|;|;|;|;|;|;|;|;|" data-smooth="FALSE"/>
+		          	</div>
+		          	</div>
+		          	<div style="padding:10px;" class="row">
+		          	<div class="col-md-4">
 		          <label class="checkbox" for="featQsec">
 		            <input id="featQsec" type="checkbox"/>
 		            <span>
 		              <h4>qsec</h4>
 		            </span>
 		          </label>
-		          <div>
-		            <label class="control-label" for="qsec ">
-		              <h4>qsec : </h4>
-		            </label>
+		          </div>
+		          <div class="col-md-8">
+		            <label class="control-label" for="qsec "></label>
 		            <input id="qsec " type="slider" name="qsec " value="18.7" class="jslider" data-from="14.5" data-to="22.9" data-step="0.3" data-skin="plastic" data-round="FALSE" data-locale="us" data-format="#,##0.#####" data-smooth="FALSE"/>
 		          </div>
+		          </div>
+		          <div style="padding:10px" class="row">
+		          <div class="col-md-4">
 		          <label class="checkbox" for="featVS">
 		            <input id="featVS" type="checkbox"/>
 		            <span>
 		              <h4>vs</h4>
 		            </span>
 		          </label>
+		          </div>
+		          <div class="col-md-8">
 		          <label class="control-label" for="vs">
-		            <h4>vs : </h4>
+		            
 		          </label>
 		          <select id="vs">
 		          		<option value="0" selected>0</option>
-						<option value="1">1</option></select>
-		          <script type="application/json" data-for="vs" data-nonempty="">{}</script>
+						<option value="1">1</option>
+				</select>
+				  <script type="application/json" data-for="vs" data-nonempty="">{}</script>
+				  </div>
+				</div>
+		        
+		        <div style="padding:10px" class="row">
+		        	<div class="col-md-4">
 		          <label class="checkbox" for="featAM">
 		            <input id="featAM" type="checkbox"/>
 		            <span>
 		              <h4>am</h4>
 		            </span>
 		          </label>
+		          </div>
+		          <div class="col-md-8">
 		          <label class="control-label" for="am">
-		            <h4>am : </h4>
+		            
 		          </label>
 		          <select id="am">
 		          		<option value="0" selected>0</option>
 						<option value="1">1</option></select>
 		          <script type="application/json" data-for="am" data-nonempty="">{}</script>
+		          </div>
+		          </div>
+		          <div style="padding:10px" class="row">
+		          <div class="col-md-4">
 		          <label class="checkbox" for="featGear">
 		            <input id="featGear" type="checkbox"/>
 		            <span>
 		              <h4>gear</h4>
 		            </span>
 		          </label>
+		          </div>
+		          <div class="col-md-8">
 		          <label class="control-label" for="gear">
-		            <h4>gear : </h4>
+		            
 		          </label>
 		          <select id="gear">
-		          		<option value="3" selected>3</option>
+	          			<option value="3" selected>3</option>
 						<option value="4">4</option>
 						<option value="5">5</option></select>
-		          <script type="application/json" data-for="gear" data-nonempty="">{}</script>
+				        <script type="application/json" data-for="gear" data-nonempty="">{}</script>
+		          </label>
+		          </div>
+		          </div>
+		          <div style="padding:10px" class="row">
+		          <div class="col-md-4">
 		          <label class="checkbox" for="featCarb">
-		            <input id="featCarb" type="checkbox"/>
-		            <span>
-		              <h4>carb</h4>
-		            </span>
-		          </label>
+				        <input id="featCarb" type="checkbox"/>
+			            <span>
+			              <h4>carb</h4>
+			            </span>
+		          </div>
+		          <div class="col-md-8">
 		          <label class="control-label" for="carb">
-		            <h4>carb : </h4>
+		            
 		          </label>
-		          <select id="carb">
+		          
+		          		<select id="carb">
 		          		<option value="1" selected>1</option>
 						<option value="2">2</option>
 						<option value="3">3</option>
 						<option value="4">4</option>
 						<option value="6">6</option>
 						<option value="8">8</option></select>
-		          <script type="application/json" data-for="carb" data-nonempty="">{}</script>
-		          <div>
-		            <button type="submit" class="btn btn-primary">Submit</button>
-		          </div>
+		          		<script type="application/json" data-for="carb" data-nonempty="">{}</script>
+		          	</div>
+		            
+		          
 		        </div>
 		      </form>
 			</div>
 
-			<div class='col-md-8' style='background-color:orange'>
-				<div id="mpg" class="shiny-text-output"></div>
+			<div class='col-md-8 container'>
+				<div class="alert alert-success">
+					
+					<div id="mpg" class="shiny-text-output"></div>
+				</div>
+
+				<div style="width:100%; height:15px"></div>
+
+				<div class='alert alert-info'>
+					<div>
+						<ul class="nav nav-tabs">
+							<li class="active"><a href="#server" data-toggle="tab">server.R</a></li>
+							<li><a href="#work" data-toggle="tab">Read Me</a></li>
+						</ul>
+
+						<div class="tab-content">
+					        <div class="tab-pane fade in active" id="server">
+					            <pre><code id="code" class='r shiny-text-output'></code></pre>
+					        </div>
+					        <div class="tab-pane fade" id="work" style="background-color:white">
+					        	<div style="background-color:#f8f8f8; padding:10px">
+						        	<code>
+						        	<strong>What does it do?</strong>
+						        	<p>
+						        		This is an application for predicting mpg (Miles/ Gallon). It takes predictor 
+						        		values as chosen by user and fits those values in a linear data model. The fitted model
+						        		is then utilized for predicting the mpg value.
+						        	</p>
+						        	<strong>Operational Instructions</strong>
+						            <p>
+						            	To use this application - 
+						            	<ul>
+						            		<li>
+						            			Please choose feature variables using the tickboxes at the very left side of the page.
+						            		</li>
+						            		<li>
+						            			Use the control widgets to pick a value for features selected in step 1. 
+						            		</li>	
+						            		<li>
+						            			The green area will display the outputs based on your choice.
+						            		</li>
+						            		<li>
+						            			Please explore the blue area to know more about the internal mechanisms of the application.
+						            		</li>
+						            	</ul>
+					            	</p>
+					            	<strong>Key Details ( Under the hood )</strong>
+					            	<p>
+					            		<ul>
+					            			<li>
+					            				The application uses R's mtcars dataset as training set for fitting the model. Hence the input ranges are taken from the mtcars dataset.
+					            			</li>
+					            			<li>
+					            				It dynamically builds the formulae for fitting into a linear model everytime user changes feature selection. 
+					            			</li>
+					            			<li>
+					            				Index.html is used instead of ui.R for ease of user interface design.
+					            			</li>
+					            		</ul>
+					            	</p>
+						            </code>
+					            </div>          
+					        </div>
+					    </div>
+				    </div>
+				</div>
 			</div>
 
 
